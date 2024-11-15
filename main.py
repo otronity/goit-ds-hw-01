@@ -3,12 +3,14 @@ import pickle
 from collections import UserDict
 from datetime import datetime, timedelta, date
 
+
 class Field:
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
         return str(self.value)
+
 
 class Name(Field):
     def __init__(self, name):
@@ -31,17 +33,17 @@ class Phone(Field):
 
 class Birthday(Field):
     def __init__(self, value):
-         # Регулярное выражение для проверки формата DD.MM.YYYY
+        # Регулярное выражение для проверки формата DD.MM.YYYY
         pattern = r'^\d{2}\.\d{2}\.\d{4}$'
         if re.match(pattern, value):
             try:
                 datetime.strptime(value, "%d.%m.%Y").date()
-                self.value = value #datetime.strptime(value, "%d.%m.%Y").date() 
+                self.value = value  # datetime.strptime(value, "%d.%m.%Y").date() 
             except ValueError:
-                raise ValueError("Invalid date format. Use DD.MM.YYYY")  
+                raise ValueError("Invalid date format. Use DD.MM.YYYY") 
         else:
-            raise ValueError("Invalid date format. Use DD.MM.YYYY")  
-               
+            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+     
 
 class Record:
     def __init__(self, name):
@@ -51,7 +53,7 @@ class Record:
 
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
-            
+        
     def add_phone(self, phone):
         if not any(p.value == phone for p in self.phones):
             self.phones.append(Phone(phone))
@@ -72,7 +74,7 @@ class Record:
     def find_phone(self, phone):
         result = list(filter(lambda record: record.value == phone, self.phones))
         return result[0] if len(result) > 0 else None
-    
+
     def remove_phone(self, phone):
         phonedel = self.find_phone(phone)
         if phonedel:
@@ -88,7 +90,7 @@ class AddressBook(UserDict):
     def find(self, name):
         result = list(filter(lambda record: record.name.value == name, self.data.values()))
         return result[0] if len(result) > 0 else None
-    
+
     def delete(self, name):
         del self.data[name]
 
@@ -100,7 +102,7 @@ class AddressBook(UserDict):
                                  for record in self.data.values()])
         return f"Address Book:\n{contacts_str}"
     
-    def string_to_date(self,date_string):
+    def string_to_date(self, date_string):
         return datetime.strptime(date_string, "%d.%m.%Y").date()
 
     def date_to_string(self, date):        
@@ -131,7 +133,8 @@ class AddressBook(UserDict):
                 if birthday_this_year <= self.find_next_weekday(today, days) and birthday_this_year >= today:
                     upcoming_birthdays.append({"name": record.name.value, "birthday": self.date_to_string(birthday_this_year)}) 
         return upcoming_birthdays
-    
+
+
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -276,6 +279,7 @@ def main():
 
         else:
             print("Invalid command.")
+
 
 if __name__ == "__main__":
     main()
